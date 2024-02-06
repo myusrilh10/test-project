@@ -26,8 +26,9 @@ func GetLibraries(c *fiber.Ctx) error {
 }
 
 type libraryDTO struct {
-	Name    string `json:"name" bson:"name"`
-	Address string `json:"address" bson:"address"`
+	Name    string   `json:"name" bson:"name"`
+	Address string   `json:"address" bson:"address"`
+	Empty   []string `json:"no_exists" bson:"books"`
 }
 
 func CreateLibrary(c *fiber.Ctx) error {
@@ -36,6 +37,8 @@ func CreateLibrary(c *fiber.Ctx) error {
 	if err := c.BodyParser(nlibrary); err != nil {
 		return err
 	}
+
+	nlibrary.Empty = make([]string, 0)
 
 	libraryCollection := database.GetCollection("libraries")
 	nDoc, err := libraryCollection.InsertOne(context.TODO(), nlibrary)
